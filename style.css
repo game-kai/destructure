@@ -1,0 +1,103 @@
+/* 横長 */
+@media (min-aspect-ratio: 3/4) {
+    main {
+        inline-size: calc(100svh * 3 / 4);
+        block-size: 100svh;
+        font-size: 10svh;
+    }
+}
+
+/* 縦長 */
+@media (max-aspect-ratio: 3/4) {
+    main {
+        inline-size: 100svw;
+        block-size: calc(100svw * 4 / 3);
+        font-size: calc(10svw * 4 / 3);
+    }
+}
+
+main {
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+}
+
+canvas {
+    inline-size: 100%;
+    block-size: 100%;
+    grid-column: 1 / 13;
+    grid-row: 1 / 13;
+    border-radius: 1rem;
+    image-rendering: pixelated;
+}
+
+#left {
+    grid-column: 1 / 5;
+    grid-row: 13 / 17;
+}
+#right {
+    grid-column: 9 / 13;
+    grid-row: 13 / 17;
+}
+#start {
+    background-color: #FCC;
+    color: #600;
+    grid-column: 6 / 8;
+    grid-row: 14 / 16;
+    font-size: 0.2em;
+}
+#start.select {
+    background-color: #600;
+    color: #FCC;
+}
+button {
+    border-radius: 1rem;
+    background-color: #C00;
+    color: #600;
+    cursor: pointer;
+}
+button.down {
+    background-color: #600;
+    color: #C00;
+}
+
+.none {
+    display: none;
+}
+
+body {
+    background-color: #FFF;
+    inline-size: 100%;
+    block-size: 100%;
+}
+
+:root {
+    color: #000;
+    inline-size: 100svi;
+    block-size: 100svb;
+    overflow: hidden;
+    font-size: 2svmin;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border-style: none;
+    font-size: 1em;
+    font-weight: normal;
+    font-family: sans-serif;
+    line-height: 2em;
+    word-spacing: 0;
+    letter-spacing: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+    text-decoration: none;
+    outline: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
