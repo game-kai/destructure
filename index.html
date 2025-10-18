@@ -3,17 +3,20 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>achiever</title>
+        <title>崩れるゲーム</title>
 	    <link href="./style.css" rel="stylesheet">
 	    <link rel="icon" href="./icon.png">
         <link rel="apple-touch-icon" href="./icon.png">
     </head>
     <body>
-        <main>
+        <div id="title">
+            <button>崩れるゲーム</button>
+        </div>
+        <main class="none">
             <canvas id="canvas" width="240" height="240"></canvas>
             <button id="left">←</button>
             <button id="right">→</button>
-            <button id="start" class="select">achiever</button>
+            <button id="start" class="select">0</button>
         </main>
         <script src="./framework.js" defer></script>
         <script src="./main.js" defer></script>

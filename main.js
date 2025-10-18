@@ -2,6 +2,9 @@
 
 // 要素
 const body = document.body;
+const title = document.querySelector('#title');
+const titleButton = document.querySelector('#title button');
+const main = document.querySelector('main');
 const canvas = document.querySelector('#canvas');
 const leftButton = document.querySelector('#left');
 const rightButton = document.querySelector('#right');
@@ -64,52 +67,52 @@ const stageData = [
     ],
     [
         '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
+        'A B            ',
+        'BBB      BBB   ',
+        '          L    ',
+        '   BBB    L    ',
+        '    L     L BBB',
+        '    L     L  L ',
+        '    L BBB L  L ',
+        '    L  L  L  L ',
+        '    LLLLLLLLLL ',
+        '            L  ',
+        '           BBB ',
+        '           B B ',
+        '            G  ',
+        '        BBBBBBB',
     ],
     [
         '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
+        '             F ',
+        'B BLLLFLLFLLLL ',
+        'B F F          ',
+        'B F         F  ',
+        'B FLLLLFLLLLLLF',
+        'F B            ',
+        'F B      F     ',
+        'F BFLLFLLLLLLF ',
+        'B F            ',
+        'B F  F     F   ',
+        'B FLLLLLFLLLLLF',
+        'BAB            ',
+        'BBB            ',
+        '   GGGGGGGGGGGG',
     ],
     [
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
+        ' BBBBBBB       ',
+        ' B     L       ',
+        ' B     L  BBBB ',
+        ' BLLFBBB     B ',
+        ' B     B   G B ',
+        ' B     B  BBBB ',
+        ' BBBFLLB       ',
+        ' B     B       ',
+        ' B     B  BBBB ',
+        ' BLLFBBB     B ',
+        ' B     L   A B ',
+        ' B     L  BBBB ',
+        ' BBBBBBB       ',
         '               ',
         '               ',
     ],
@@ -149,6 +152,8 @@ const stageData = [
     ],
 ];
 
+let started = false; // ゲーム開始済みフラグ
+
 // タイルの個数
 const tileNum = {
     x: 15,
@@ -176,6 +181,7 @@ const player = {
     left: false,
     floor: false, // 接地中
     climb: false, // 登り中
+    ceil: false,
     sx: 0, // 描画キャラ
     sy: 0,
     anim: 0,
@@ -267,7 +273,10 @@ const touchedTile = (y, x, selfY = null) => {
         }
         if(0 < ty) ty--; else break;
     }
-    return {tile: tile, ty: ty, tx: tx};
+
+    const py = ty * sprite.ch + current.drop[ty][tx];
+
+    return {tile: tile, ty: ty, tx: tx, py: py};
 };
 
 // 赤くする、上下にも一瞬で伝染
@@ -277,19 +286,25 @@ const turnRed = (y, x) => {
         current.stage[y][x] >= 12
     ) return; // 空白などなら返す
 
+    if(current.updated[y][x]) return;
+
     current.stage[y][x] += 12;
     current.updated[y][x] = true;
     let i;
     i = 1;
     while(0 <= y - i) { // 上方向に全部赤くする
-        if(current.stage[y - i][x] === -1) break;
+        if(current.stage[y - i][x] < 0) break;
+        if(current.stage[y - i][x] >= 12) break;
+        if(current.updated[y - i][x]) continue;
         current.stage[y - i][x] += 12;
         current.updated[y - i][x] = true;
         i++;
     }
     i = 1;
     while(y + i < tileNum.y - 1) { // 下方向に全部赤くする
-        if(current.stage[y + i][x] === -1) break;
+        if(current.stage[y + i][x] < 0) break;
+        if(current.stage[y + i][x] >= 12) break;
+        if(current.updated[y + i][x]) continue;
         current.stage[y + i][x] += 12;
         current.updated[y + i][x] = true;
         i++;
@@ -303,7 +318,6 @@ const updateStage = (deltaTime, infection) => {
     // 更新済みフラグをおろす、ブロックを落下させる
     for (let y = current.stage.length - 1; y >= 0; y--) {
         for (let x = 0; x < current.stage[y].length; x++) {
-
             current.updated[y][x] = false;
             if(current.speed[y][x] > 0) current.speed[y][x] += 1 / 128;
             if(current.speed[y][x] > 8) current.speed[y][x] = 4;
@@ -372,7 +386,8 @@ const hit = () => {
     const goal = 3;
 
     player.floor = false; // 着地フラグをおろす
-    player.climb = false; // 壁登りフラグをおろす
+
+    let climb = false;
 
     let r0, r1;
     // 左の壁を登る
@@ -390,7 +405,11 @@ const hit = () => {
         player.vx = 0;
         player.x = (r0.tx + 1) * cw;
         player.vy = -48;
-        player.climb = true;
+        climb = true;
+        if(player.climb === false) {
+            sound.play(50, 0.05, 45);
+            player.anim = 0;
+        }
     }
     // 右の壁を登る
     r0 = touchedTile(player.y + ch * 3 / 4, player.x + cw);
@@ -407,8 +426,14 @@ const hit = () => {
         player.vx = 0;
         player.x = (r0.tx - 1) * cw;
         player.vy = -48;
-        player.climb = true;
+        climb = true;
+        if(player.climb === false) {
+            sound.play(50, 0.05, 45);
+            player.anim = 0;
+        }
     }
+
+    player.climb = climb; // 壁登りフラグをおろす
 
     // 足元に接地
     r0 = touchedTile(player.y + ch, player.x + 4);
@@ -428,18 +453,19 @@ const hit = () => {
         const t0 = f(r0.tile / dn % tn);
         const t1 = f(r1.tile / dn % tn);
 
+        // 左右の足どちらが乗っているか
         let t = -1;
         if(t0 === block && t1 !== block) t = 0;
         if(t0 !== block && t1 === block) t = 1;
-        if(t0 === block && t1 === block && r0.ty < r1.ty) t = 0;
-        if(t0 === block && t1 === block && r0.ty >= r1.ty) t = 1;
+        if(t0 === block && t1 === block && r0.py < r1.py) t = 0;
+        if(t0 === block && t1 === block && r0.py >= r1.py) t = 1;
 
         let y = (t === 0 ?
-            r0.ty * ch + current.drop[r0.ty][r0.tx] - ch:
-            r1.ty * ch + current.drop[r1.ty][r1.tx] - ch);
+            r0.py - ch:
+            r1.py - ch);
         player.y = y;
         
-        if(player.fty === -1) sound.play(48, 0.05, 48);
+        if(player.fty === -1) sound.play(43, 0.05, 38); // 接地時の音
 
         player.ftx = t === 0 ? r0.tx : r1.tx ;
         player.fty = t === 0 ? r0.ty : r1.ty ;
@@ -450,6 +476,8 @@ const hit = () => {
         player.fty = -1;
     }
 
+    player.ceil = false;
+
     // 天井に当たる
     r0 = touchedTile(player.y, player.x + cw / 2);
     if(
@@ -458,15 +486,16 @@ const hit = () => {
     ) {
         turnRed(r0.ty, r0.tx);
         player.vy = 0;
-        const y = r0.ty * ch + current.drop[r0.ty][r0.tx] + ch;
+        const y = r0.py + ch;
         player.y = y;
+        player.ceil = true;
     }
 
     // 上下から挟まれたらミス
-    if(player.floor && player.ceil) {
+    if(player.floor && f(r0.tile / dn % tn) === block) {
         player.miss = 120;
         player.vy = -32;
-        sound.play(51, 0.2, 39);
+        sound.play(39, 0.2, 27);
     }
 
     r0 = touchedTile(player.y + ch / 2, player.x + cw / 2); // プレイヤーの中央
@@ -477,7 +506,7 @@ const hit = () => {
     ) {
         player.miss = 120;
         player.vy = -32;
-        sound.play(51, 0.2, 39);
+        sound.play(39, 0.2, 27);
     }
 
     // ゴール
@@ -493,8 +522,11 @@ const hit = () => {
 
 // アニメーション
 const anim = (deltaTime) => {
-    if(player.climb) player.anim += 12 * deltaTime;
-    else if(player.vx !== 0 && player.floor) player.anim += 12 * deltaTime;
+    const climbAnimSpeed = 12 * deltaTime;
+    const floorAnimSpeed = 12 * deltaTime;
+
+    if(player.climb) player.anim += climbAnimSpeed;
+    else if(player.vx !== 0 && player.floor) player.anim += floorAnimSpeed;
     if(!player.floor && !player.climb) player.anim = 0;
 
     // 描画キャラ
@@ -509,9 +541,12 @@ const anim = (deltaTime) => {
     if(player.climb) {
         player.sx = 1 + Math.floor(player.anim % 3);
         player.sy = 1;
-    } else if(player.floor) {
+        if(player.anim % 3 - climbAnimSpeed < 0) sound.play(50, 0.05, 45);
+    } else
+    if(player.floor) {
         player.sx = player.vx === 0 ? 0 : 1 + Math.floor(player.anim % 3);
         player.sy = 0;
+        if(player.vx !== 0 && player.anim % 3 - floorAnimSpeed < 0) sound.play(43, 0.05, 38);
     } else {
         player.sx = 0;
         player.sy = 2;
@@ -592,16 +627,19 @@ const select = (deltaTime) => {
     if(input.left === 1) current.id--;
     if(input.right === 1) current.id++;
 
-    // ステージの最大数を超えたらループ
-    if(current.id < 0) current.id += stageData.length;
-    if(stageData.length <= current.id) current.id -= stageData.length;
+    // ステージの最大数を超えたら動かなくする
+    if(current.id < 0) current.id = 0;
+    if(stageData.length <= current.id) current.id = stageData.length - 1;
 
-    if(input.left === 1) selectStage(current.id);
-    if(input.right === 1) selectStage(current.id);
+    if(input.left === 1 || input.right === 1) {
+        sound.play(46, 0.05, 46);
+        achieverButton.textContent = current.id;
+        selectStage(current.id);
+    }
 };
 
 
-// プレイ中
+// プレイ中ずっと呼ばれる関数
 const play = (deltaTime) => {
     // ステージ更新
     const speed = 4;
@@ -651,22 +689,25 @@ const sound = new Sound();
 const eventFunction = {
     down: {
         left : () => {
+            if(!started) return;
             input.left = 1;
             leftButton.className = 'down';
         },
         right : () => {
+            if(!started) return;
             input.right = 1;
             rightButton.className = 'down';
         },
         // スタートストップボタン
         achiever : () => {
-            sound.start();
+            if(!started) return;
 
+            // 開始した時
             if(achieverButton.className === 'select') {
                 achieverButton.className = '';
                 current.playing = true;
                 sound.play(51, 0.1, 51);
-            } else {
+            } else { // やりなおした時
                 achieverButton.className = 'select';
                 current.playing = false;
                 player.sx = 0;
@@ -674,6 +715,11 @@ const eventFunction = {
                 player.anim = 0;
                 player.vx = 0;
                 player.vy = 0;
+                player.ftx = 0;
+                player.fty = 0;
+                player.floor = false;
+                player.climb = false;
+                player.ceil = false;
                 player.left = false;
                 player.miss = false;
                 player.goal = false;
@@ -684,10 +730,12 @@ const eventFunction = {
     },
     up: {
         left : () => {
+            if(!started) return;
             input.left = 0;
             leftButton.className = '';
         },
         right : () => {
+            if(!started) return;
             input.right = 0;
             rightButton.className = '';
         },
@@ -724,6 +772,14 @@ leftButton.addEventListener('touchstart', eventFunction.down.left);
 leftButton.addEventListener('touchend', eventFunction.up.left);
 rightButton.addEventListener('touchstart', eventFunction.down.right);
 rightButton.addEventListener('touchend', eventFunction.up.right);
+
+// 右クリック・長押し禁止
+titleButton.addEventListener('click', () => {
+    sound.start();
+    title.classList.add('none');
+    main.classList.remove('none');
+    started = true;
+});
 
 // 右クリック・長押し禁止
 document.addEventListener('contextmenu', () => {

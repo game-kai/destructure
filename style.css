@@ -43,9 +43,9 @@ canvas {
 #start {
     background-color: #FCC;
     color: #600;
+    font-size: 0.5em;
     grid-column: 6 / 8;
     grid-row: 14 / 16;
-    font-size: 0.2em;
 }
 #start.select {
     background-color: #600;
@@ -62,6 +62,14 @@ button.down {
     color: #C00;
 }
 
+#title button {
+    left: calc(50% - 3.5em);
+    top: calc(50% - 1em);
+    position: fixed;
+    padding: 0 0.5em;
+    font-size: 4em;
+}
+
 .none {
     display: none;
 }
@@ -72,12 +80,11 @@ body {
     block-size: 100%;
 }
 
-:root {
+html {
     color: #000;
     inline-size: 100svi;
     block-size: 100svb;
     overflow: hidden;
-    font-size: 2svmin;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }

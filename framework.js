@@ -132,7 +132,7 @@ const Sound = class {
         this.#audioContext = new AudioContext();
 
         this.#oscillatorNode = new OscillatorNode(this.#audioContext);
-        this.#oscillatorNode.type = "square";
+        this.#oscillatorNode.type = 'square';
 
         this.#gainNode = this.#audioContext.createGain();
         this.#gainNode.gain.setValueAtTime(0, this.#audioContext.currentTime);
@@ -155,14 +155,13 @@ const Sound = class {
     // 鳴らす
     play (note0 = 51, time = 0.5, note1 = 51) {
         if(!this.#isStarted) return;
-        return;
 
         const currentTime = this.#audioContext.currentTime;
         this.#oscillatorNode.frequency.setValueAtTime(this.#frequency[note0], currentTime);
         this.#oscillatorNode.frequency.linearRampToValueAtTime(this.#frequency[note1], currentTime + time);
         this.#gainNode.gain.setValueAtTime(this.#gainNode.gain.value, currentTime);
-        this.#gainNode.gain.linearRampToValueAtTime(0.5, currentTime + 0.03125);
-        this.#gainNode.gain.setValueAtTime(0.5, currentTime + time - 0.03125);
+        this.#gainNode.gain.linearRampToValueAtTime(0.2, currentTime + 0.02);
+        this.#gainNode.gain.setValueAtTime(0.2, currentTime + time - 0.02);
         this.#gainNode.gain.linearRampToValueAtTime(0, currentTime + time);
     }
 
@@ -173,6 +172,6 @@ const Sound = class {
         const currentTime = this.#audioContext.currentTime;
         this.#gainNode.gain.cancelAndHoldAtTime(currentTime);
         this.#gainNode.gain.setValueAtTime(this.#gainNode.gain.value, currentTime);
-        this.#gainNode.gain.linearRampToValueAtTime(0, currentTime + 0.03125);
+        this.#gainNode.gain.linearRampToValueAtTime(0, currentTime + 0.02);
     }
 }
