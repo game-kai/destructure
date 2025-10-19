@@ -28,7 +28,6 @@ canvas {
     block-size: 100%;
     grid-column: 1 / 13;
     grid-row: 1 / 13;
-    border-radius: 1rem;
     image-rendering: pixelated;
 }
 

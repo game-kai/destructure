@@ -50,24 +50,58 @@ const stageData = [
     ],
     [
         '              G',
-        '     FLLL   LLL',
-        '     L  L  BB  ',
-        '     L  LLLBBL ',
-        ' FLBBL  F    L ',
-        '   BB        F ',
-        '    L    BBLLL ',
-        '    F    BB    ',
-        '          L    ',
-        '      BBLLF    ',
-        '      BB       ',
-        '    B  L       ',
-        '  A BLLLLF     ',
-        ' BBBB          ',
+        '    LFLL    LLL',
+        ' F  L  L  BBB  ',
+        ' L  L  LLLB BLF',
+        ' L  L  L  BBB L',
+        ' LBBB  F      B',
+        '  B B         L',
+        '  BBB   BBBLLLF',
+        '   F    B B    ',
+        '        BBB    ',
+        '        L      ',
+        '  A    BBBLLF  ',
+        ' BBBLLLB B     ',
+        '       BBB     ',
         '               ',
     ],
     [
         '               ',
-        'A B            ',
+        '               ',
+        'B BFLLFLLFLLLF ',
+        'B F            ',
+        'B F            ',
+        'B FLLLLFLLFLF  ',
+        'F B            ',
+        'F B            ',
+        'F BFLLFLLFLLLF ',
+        'B F            ',
+        'B F            ',
+        'B FLLFLLFLFLLLF',
+        'BAB            ',
+        'BBB            ',
+        '         G     ',
+    ],
+    [
+        ' BBBBBBB       ',
+        ' B     L       ',
+        ' B     L       ',
+        ' BLLLFBB  BBBB ',
+        ' B     BF    B ',
+        ' B     B   G B ',
+        ' BBFLLLB  BBBB ',
+        ' B     B       ',
+        ' B     BF      ',
+        ' BLLLFBB  BBBB ',
+        ' B     L     B ',
+        ' B     L   A B ',
+        ' BBBBBBB  BBBB ',
+        '               ',
+        '               ',
+    ],
+    [
+        '               ',
+        ' A             ',
         'BBB      BBB   ',
         '          L    ',
         '   BBB    L    ',
@@ -76,78 +110,78 @@ const stageData = [
         '    L BBB L  L ',
         '    L  L  L  L ',
         '    LLLLLLLLLL ',
-        '            L  ',
-        '           BBB ',
-        '           B B ',
-        '            G  ',
-        '        BBBBBBB',
+        '     L  L   L  ',
+        '     L BBB BBB ',
+        '     L     B B ',
+        '    BBB     G  ',
+        '          BBBBB',
     ],
     [
-        '               ',
         '             F ',
-        'B BLLLFLLFLLLL ',
-        'B F F          ',
-        'B F         F  ',
-        'B FLLLLFLLLLLLF',
-        'F B            ',
-        'F B      F     ',
-        'F BFLLFLLLLLLF ',
-        'B F            ',
-        'B F  F     F   ',
-        'B FLLLLLFLLLLLF',
-        'BAB            ',
-        'BBB            ',
-        '   GGGGGGGGGGGG',
+        '             F ',
+        '         B   F ',
+        '             F ',
+        'B     B      F ',
+        'B            F ',
+        'B  B         F ',
+        'B            LG',
+        'B  FFFF      F ',
+        'BBBBBBBB B   F ',
+        '       B     F ',
+        '             F ',
+        '         B   F ',
+        'BA FFFF  B   F ',
+        'BBBBBBBBBBLLLF ',
     ],
     [
-        ' BBBBBBB       ',
-        ' B     L       ',
-        ' B     L  BBBB ',
-        ' BLLFBBB     B ',
-        ' B     B   G B ',
-        ' B     B  BBBB ',
-        ' BBBFLLB       ',
-        ' B     B       ',
-        ' B     B  BBBB ',
-        ' BLLFBBB     B ',
-        ' B     L   A B ',
-        ' B     L  BBBB ',
-        ' BBBBBBB       ',
-        '               ',
+        'G              ',
+        'L              ',
+        'L              ',
+        'L     F        ',
+        'L     L        ',
+        'L     F        ',
+        'L     BBB     L',
+        'L     B B     F',
+        'L       B     L',
+        'L     F     BBB',
+        'L     F     B B',
+        'L     FA    B  ',
+        'L     BBB      ',
+        'L     B B      ',
+        'LLLLLLL B      ',
+    ],
+    [
+        '       F     G ',
+        ' BLFFFLBLFFFLL ',
+        ' B     F       ',
+        ' B             ',
+        ' B           F ',
+        ' B  FLLLBBBBBB ',
+        ' B  F       FB ',
+        ' B  F B      B ',
+        ' B  F F FFF  B ',
+        ' BBBBBBBBBF  B ',
+        '             B ',
+        '             B ',
+        '   A         B ',
+        ' BBBBBBBBBBBBB ',
         '               ',
     ],
     [
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-    ],
-    [
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
-        '               ',
+        '    BBB       G',
+        '    B BLFFFLLLL',
+        'BLLLB      L  B',
+        'L    LLFLL L   ',
+        'LLB  L   BBBBB ',
+        '  L  L   L   B ',
+        '  LLBBB  L   B ',
+        '         BLF B ',
+        '         L   B ',
+        '         L   B ',
+        '   FLLLLBBBBBB ',
+        '   L    B B    ',
+        ' A L BFFBBB    ',
+        'BBBBBBBBB      ',
         '               ',
     ],
 ];
@@ -267,7 +301,7 @@ const touchedTile = (y, x, selfY = null) => {
         const d = current.drop[ty][tx];
         const fy = Math.floor((y - (ty * ch + d)) / ch); // 落ちてきているブロックのプレイヤーから見た相対的な縦位置
 
-        if(fy === 0 && s !== -1) { // 白以外なら終わり
+        if(fy === 0 && s > -1) { // 白以外なら終わり
             tile = s;
             break;
         }
@@ -286,8 +320,6 @@ const turnRed = (y, x) => {
         current.stage[y][x] >= 12
     ) return; // 空白などなら返す
 
-    if(current.updated[y][x]) return;
-
     current.stage[y][x] += 12;
     current.updated[y][x] = true;
     let i;
@@ -295,7 +327,6 @@ const turnRed = (y, x) => {
     while(0 <= y - i) { // 上方向に全部赤くする
         if(current.stage[y - i][x] < 0) break;
         if(current.stage[y - i][x] >= 12) break;
-        if(current.updated[y - i][x]) continue;
         current.stage[y - i][x] += 12;
         current.updated[y - i][x] = true;
         i++;
@@ -304,7 +335,6 @@ const turnRed = (y, x) => {
     while(y + i < tileNum.y - 1) { // 下方向に全部赤くする
         if(current.stage[y + i][x] < 0) break;
         if(current.stage[y + i][x] >= 12) break;
-        if(current.updated[y + i][x]) continue;
         current.stage[y + i][x] += 12;
         current.updated[y + i][x] = true;
         i++;
@@ -320,7 +350,7 @@ const updateStage = (deltaTime, infection) => {
         for (let x = 0; x < current.stage[y].length; x++) {
             current.updated[y][x] = false;
             if(current.speed[y][x] > 0) current.speed[y][x] += 1 / 128;
-            if(current.speed[y][x] > 8) current.speed[y][x] = 4;
+            if(current.speed[y][x] > 8) current.speed[y][x] = 8;
             const s = current.speed[y][x]; // スピード
             current.drop[y][x] += s * deltaTime; // 落下ピクセル
             if(player.floor && player.ftx === x && player.fty === y) player.y += s * deltaTime; // 乗っているプレイヤーも落下
@@ -400,8 +430,8 @@ const hit = () => {
             f(r1.tile / dn % tn) === block
         )
     ) {
-        turnRed(r0.ty, r0.tx);
-        turnRed(r1.ty, r1.tx);
+        if(r0.tile !== -1) turnRed(r0.ty, r0.tx);
+        if(r1.tile !== -1) turnRed(r1.ty, r1.tx);
         player.vx = 0;
         player.x = (r0.tx + 1) * cw;
         player.vy = -48;
@@ -421,8 +451,8 @@ const hit = () => {
             f(r1.tile / dn % tn) === block
         )
     ) {
-        turnRed(r0.ty, r0.tx);
-        turnRed(r1.ty, r1.tx);
+        if(r0.tile !== -1) turnRed(r0.ty, r0.tx);
+        if(r1.tile !== -1) turnRed(r1.ty, r1.tx);
         player.vx = 0;
         player.x = (r0.tx - 1) * cw;
         player.vy = -48;
@@ -446,10 +476,6 @@ const hit = () => {
             f(r1.tile / dn % tn) === block
         )
     ) {
-        turnRed(r0.ty, r0.tx);
-        turnRed(r1.ty, r1.tx);
-        player.vy = 0;
-
         const t0 = f(r0.tile / dn % tn);
         const t1 = f(r1.tile / dn % tn);
 
@@ -463,8 +489,13 @@ const hit = () => {
         let y = (t === 0 ?
             r0.py - ch:
             r1.py - ch);
+
+        if(t === 0) turnRed(r0.ty, r0.tx);
+        if(t === 1) turnRed(r1.ty, r1.tx);
+
+        player.vy = 0;
         player.y = y;
-        
+
         if(player.fty === -1) sound.play(43, 0.05, 38); // 接地時の音
 
         player.ftx = t === 0 ? r0.tx : r1.tx ;
@@ -495,7 +526,7 @@ const hit = () => {
     if(player.floor && f(r0.tile / dn % tn) === block) {
         player.miss = 120;
         player.vy = -32;
-        sound.play(39, 0.2, 27);
+        sound.play(39, 0.4, 27);
     }
 
     r0 = touchedTile(player.y + ch / 2, player.x + cw / 2); // プレイヤーの中央
@@ -506,7 +537,7 @@ const hit = () => {
     ) {
         player.miss = 120;
         player.vy = -32;
-        sound.play(39, 0.2, 27);
+        sound.play(39, 0.4, 27);
     }
 
     // ゴール
@@ -583,7 +614,7 @@ const updatePlayer = (deltaTime) => {
     // 下に落下した
     if(canvas.height <= player.y && !player.miss) {
         player.miss = true;
-        sound.play(51, 0.2, 39);
+        sound.play(39, 0.4, 27);
     }
 }
 
@@ -773,7 +804,7 @@ leftButton.addEventListener('touchend', eventFunction.up.left);
 rightButton.addEventListener('touchstart', eventFunction.down.right);
 rightButton.addEventListener('touchend', eventFunction.up.right);
 
-// 右クリック・長押し禁止
+// タイトルを押した
 titleButton.addEventListener('click', () => {
     sound.start();
     title.classList.add('none');
@@ -800,6 +831,8 @@ document.addEventListener('visibilitychange', (e) => {
         player.miss = false;
         player.goal = false;
         selectStage(current.id);
+        title.classList.remove('none');
+        main.classList.add('none');
         sound.isStarted = false; // 音声を再設定しないと止まる
     }
 });
