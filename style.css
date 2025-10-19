@@ -77,6 +77,7 @@ body {
     background-color: #FFF;
     inline-size: 100%;
     block-size: 100%;
+    overscroll-behavior: none;
 }
 
 html {
@@ -84,6 +85,7 @@ html {
     inline-size: 100svi;
     block-size: 100svb;
     overflow: hidden;
+    overscroll-behavior: none;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }
