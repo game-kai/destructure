@@ -1,1 +1,1 @@
-[destructure](https://game-kai.github.io/destructure/)
+[崩れるゲーム](https://game-kai.github.io/destructure/)
