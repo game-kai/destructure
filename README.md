@@ -1,1 +1,1 @@
-[崩れるゲーム](https://game-kai.github.io/kuzureru/)
+[くずれるゲーム](https://game-kai.github.io/kuzureru/)
