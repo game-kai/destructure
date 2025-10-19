@@ -161,8 +161,8 @@ const Sound = class {
         this.#oscillatorNode.frequency.linearRampToValueAtTime(this.#frequency[note1], currentTime + time);
         this.#gainNode.gain.cancelScheduledValues(currentTime);
         this.#gainNode.gain.setValueAtTime(this.#gainNode.gain.value, currentTime);
-        this.#gainNode.gain.linearRampToValueAtTime(0.2, currentTime + 0.02);
-        this.#gainNode.gain.setValueAtTime(0.2, currentTime + time - 0.02);
+        this.#gainNode.gain.linearRampToValueAtTime(0.8, currentTime + 0.02);
+        this.#gainNode.gain.setValueAtTime(0.8, currentTime + time - 0.02);
         this.#gainNode.gain.linearRampToValueAtTime(0, currentTime + time);
     }
 

@@ -62,11 +62,11 @@ button.down {
 }
 
 #title button {
-    left: calc(50% - 3.5em);
+    left: calc(50% - 4em);
     top: calc(50% - 1em);
     position: fixed;
     padding: 0 0.5em;
-    font-size: 4em;
+    font-size: 5svi;
 }
 
 .none {

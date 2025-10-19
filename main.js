@@ -57,24 +57,24 @@ const stageData = [
         ' LBBB  F      B',
         '  B B         L',
         '  BBB   BBBLLLF',
-        '   F    B B    ',
-        '        BBB    ',
+        '   L    B B    ',
+        '   F    BBB    ',
         '        L      ',
-        '  A    BBBLLF  ',
-        ' BBBLLLB B     ',
-        '       BBB     ',
-        '               ',
+        '  A   BBB      ',
+        ' BBBLLB B      ',
+        ' B B  BBBLLLLF ',
+        ' BBB           ',
     ],
     [
         '               ',
         '               ',
-        'B BFLLFLLFLLLF ',
+        'B BFLLFLLLFLLF ',
         'B F            ',
         'B F            ',
-        'B FLLLLFLLFLF  ',
+        'B FLLFLLFLLLF  ',
         'F B            ',
         'F B            ',
-        'F BFLLFLLFLLLF ',
+        'F BFLLFLLLFLLF ',
         'B F            ',
         'B F            ',
         'B FLLFLLFLFLLLF',
@@ -98,6 +98,23 @@ const stageData = [
         ' BBBBBBB  BBBB ',
         '               ',
         '               ',
+    ],
+    [
+        'G              ',
+        'L              ',
+        'L              ',
+        'L     F        ',
+        'L     L        ',
+        'L     F        ',
+        'L     BBB     L',
+        'L     B B     F',
+        'L       B     L',
+        'L     F     BBB',
+        'L     F     B B',
+        'L     FA    B  ',
+        'L     BBB      ',
+        'L     B B      ',
+        'LLLLLLL B      ',
     ],
     [
         '               ',
@@ -132,23 +149,6 @@ const stageData = [
         '         B   F ',
         'BA FFFF  B   F ',
         'BBBBBBBBBBLLLF ',
-    ],
-    [
-        'G              ',
-        'L              ',
-        'L              ',
-        'L     F        ',
-        'L     L        ',
-        'L     F        ',
-        'L     BBB     L',
-        'L     B B     F',
-        'L       B     L',
-        'L     F     BBB',
-        'L     F     B B',
-        'L     FA    B  ',
-        'L     BBB      ',
-        'L     B B      ',
-        'LLLLLLL B      ',
     ],
     [
         '       F     G ',
@@ -437,7 +437,7 @@ const hit = () => {
         player.vy = -48;
         climb = true;
         if(player.climb === false) {
-            sound.play(50, 0.05, 45);
+            sound.play(62, 0.05, 57);
             player.anim = 0;
         }
     }
@@ -458,7 +458,7 @@ const hit = () => {
         player.vy = -48;
         climb = true;
         if(player.climb === false) {
-            sound.play(50, 0.05, 45);
+            sound.play(62, 0.05, 57);
             player.anim = 0;
         }
     }
@@ -496,7 +496,7 @@ const hit = () => {
         player.vy = 0;
         player.y = y;
 
-        if(player.fty === -1) sound.play(43, 0.05, 38); // 接地時の音
+        if(player.fty === -1) sound.play(55, 0.05, 50); // 接地時の音
 
         player.ftx = t === 0 ? r0.tx : r1.tx ;
         player.fty = t === 0 ? r0.ty : r1.ty ;
@@ -572,12 +572,12 @@ const anim = (deltaTime) => {
     if(player.climb) {
         player.sx = 1 + Math.floor(player.anim % 3);
         player.sy = 1;
-        if(player.anim % 3 - climbAnimSpeed < 0) sound.play(50, 0.05, 45);
+        if(player.anim % 3 - climbAnimSpeed < 0) sound.play(62, 0.05, 57);
     } else
     if(player.floor) {
         player.sx = player.vx === 0 ? 0 : 1 + Math.floor(player.anim % 3);
         player.sy = 0;
-        if(player.vx !== 0 && player.anim % 3 - floorAnimSpeed < 0) sound.play(43, 0.05, 38);
+        if(player.vx !== 0 && player.anim % 3 - floorAnimSpeed < 0) sound.play(55, 0.05, 50);
     } else {
         player.sx = 0;
         player.sy = 2;
