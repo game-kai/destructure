@@ -719,19 +719,22 @@ const sound = new Sound();
 // イベントのメソッド
 const eventFunction = {
     down: {
-        left : () => {
+        left : (event) => {
             if(!started) return;
+            event.preventDefault();
             input.left = 1;
             leftButton.className = 'down';
         },
-        right : () => {
+        right : (event) => {
             if(!started) return;
+            event.preventDefault();
             input.right = 1;
             rightButton.className = 'down';
         },
         // スタートストップボタン
-        achiever : () => {
+        achiever : (event) => {
             if(!started) return;
+            event.preventDefault();
 
             // 開始した時
             if(achieverButton.className === 'select') {
@@ -760,13 +763,15 @@ const eventFunction = {
         },
     },
     up: {
-        left : () => {
+        left : (event) => {
             if(!started) return;
+            event.preventDefault();
             input.left = 0;
             leftButton.className = '';
         },
-        right : () => {
+        right : (event) => {
             if(!started) return;
+            event.preventDefault();
             input.right = 0;
             rightButton.className = '';
         },
@@ -774,48 +779,56 @@ const eventFunction = {
 }
 
 // キーボード
-addEventListener('keydown', (e) => {
-    if(e.key === 'a') eventFunction.down.left();
-    if(e.key === 'd') eventFunction.down.right();
-    if(e.key === 'ArrowLeft') eventFunction.down.left();
-    if(e.key === 'ArrowRight') eventFunction.down.right();
-    if(e.key === ' ') eventFunction.down.achiever();
-    if(e.key === 'Enter') eventFunction.down.achiever();
+addEventListener('keydown', (event) => {
+    if(event.key === 'a') eventFunction.down.left(event);
+    if(event.key === 'd') eventFunction.down.right(event);
+    if(event.key === 'ArrowLeft') eventFunction.down.left(event);
+    if(event.key === 'ArrowRight') eventFunction.down.right(event);
+    if(event.key === ' ') eventFunction.down.achiever(event);
+    if(event.key === 'Enter') eventFunction.down.achiever(event);
 });
-addEventListener('keyup', (e) => {
-    if(e.key === 'a') eventFunction.up.left();
-    if(e.key === 'd') eventFunction.up.right();
-    if(e.key === 'ArrowLeft') eventFunction.up.left();
-    if(e.key === 'ArrowRight') eventFunction.up.right();
+addEventListener('keyup', (event) => {
+    if(event.key === 'a') eventFunction.up.left(event);
+    if(event.key === 'd') eventFunction.up.right(event);
+    if(event.key === 'ArrowLeft') eventFunction.up.left(event);
+    if(event.key === 'ArrowRight') eventFunction.up.right(event);
 });
 
 // マウス
-leftButton.addEventListener('mousedown', eventFunction.down.left);
-leftButton.addEventListener('mouseup', eventFunction.up.left);
-leftButton.addEventListener('mouseleave', eventFunction.up.left);
-rightButton.addEventListener('mousedown', eventFunction.down.right);
-rightButton.addEventListener('mouseup', eventFunction.up.right);
-rightButton.addEventListener('mouseleave', eventFunction.up.right);
-achieverButton.addEventListener('mousedown', eventFunction.down.achiever);
+leftButton.addEventListener('mousedown', eventFunction.down.left, { passive: false });
+leftButton.addEventListener('mouseup', eventFunction.up.left, { passive: false });
+leftButton.addEventListener('mouseleave', eventFunction.up.left, { passive: false });
+rightButton.addEventListener('mousedown', eventFunction.down.right, { passive: false });
+rightButton.addEventListener('mouseup', eventFunction.up.right, { passive: false });
+rightButton.addEventListener('mouseleave', eventFunction.up.right, { passive: false });
+achieverButton.addEventListener('mousedown', eventFunction.down.achiever, { passive: false });
 
 // タッチ
-leftButton.addEventListener('touchstart', eventFunction.down.left);
-leftButton.addEventListener('touchend', eventFunction.up.left);
-rightButton.addEventListener('touchstart', eventFunction.down.right);
-rightButton.addEventListener('touchend', eventFunction.up.right);
+leftButton.addEventListener('touchstart', eventFunction.down.left, { passive: false });
+leftButton.addEventListener('touchend', eventFunction.up.left, { passive: false });
+rightButton.addEventListener('touchstart', eventFunction.down.right, { passive: false });
+rightButton.addEventListener('touchend', eventFunction.up.right, { passive: false });
 
 // タイトルを押した
-titleButton.addEventListener('click', () => {
+titleButton.addEventListener('click', (event) => {
+    event.preventDefault();
     sound.start();
     title.classList.add('none');
     main.classList.remove('none');
     started = true;
-});
+}, { passive: false });
+
+// イベントのキャンセル用
+const eventCancel = (event) => {
+    event.preventDefault();
+};
 
 // 右クリック・長押し禁止
-document.addEventListener('contextmenu', () => {
-    return false;
-});
+document.addEventListener('contextmenu', eventCancel, { passive: false });
+
+// キャンバスも押せなくする
+canvas.addEventListener('mousedown', eventCancel, { passive: false });
+canvas.addEventListener('touchstart', eventCancel, { passive: false });
 
 // 画面が離れた時の処理
 document.addEventListener('visibilitychange', (e) => {
